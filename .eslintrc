@@ -1,0 +1,22 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "env": {
+    "es2020": true,
+    "browser": true,
+    "node": true
+  },
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "globals": {
+    "browser": false,
+    "chrome": false
+  },
+  "rules": {
+    "@typescript-eslint/camelcase": "off"
+  }
+}

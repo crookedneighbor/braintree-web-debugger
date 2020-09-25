@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      /* Just for tests */
+      "Js/*": ["src/js/*"],
+      "Helpers/*": ["test/helpers/*"],
+      /* These need to be duplicated from the webpack config */
+      "Browser/*": ["build/browser-utils/*"],
+      "Constants": ["src/js/resources/constants.ts"],
+      "Lib/*": ["src/js/lib/*"],
+      "Types": ["src/js/types/*"]
+    },
+    "outDir": "./dist/",
+    "module": "commonjs",
+    "target": "es2019",
+    "lib": ["es2019", "dom"],
+    "esModuleInterop": true,
+    /* Remove this once conversion is complete */
+    "allowJs": true
+  },
+  "include": ["./src/**/*", "./test/**/*"]
+}

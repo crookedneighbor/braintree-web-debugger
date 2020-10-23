@@ -1,8 +1,8 @@
 {
-  "name": "your-extension-short-name-here",
+  "name": "braintree-web-debugger",
   "private": true,
   "version": "0.0.1",
-  "description": "Your browser extension short description here.",
+  "description": "A browser extension for debugging the Braintree web sdk",
   "scripts": {
     "pretty": "prettier --write .",
     "lint": "eslint --ext ts .",
@@ -49,5 +49,8 @@
     "webpack-dev-server": "^3.11.0",
     "write-file-webpack-plugin": "^4.5.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@braintree/asset-loader": "^0.4.4",
+    "framebus": "^4.0.2"
+  }
 }

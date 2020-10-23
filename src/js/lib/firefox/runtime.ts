@@ -1,6 +1,7 @@
 import type {
   FirefoxBrowserExtension,
   OnHeadersReceivedOptions,
+  OnBeforeRequestOptions,
 } from "Js/types/browser";
 
 export function openOptionsPage(): void {
@@ -14,6 +15,14 @@ export function onInstalled(): FirefoxBrowserExtension["runtime"]["onInstalled"]
 // https://stackoverflow.com/a/15534822/2601552
 export function onHeadersReceived(options: OnHeadersReceivedOptions): void {
   return browser.webRequest.onHeadersReceived.addListener(
+    options.addListener,
+    options.config,
+    options.permissions
+  );
+}
+
+export function onBeforeRequest(options: OnBeforeRequestOptions): void {
+  return browser.webRequest.onBeforeRequest.addListener(
     options.addListener,
     options.config,
     options.permissions

@@ -2,10 +2,15 @@
 declare global {
   const browser: FirefoxBrowserExtension;
 }
-type AddListener = (info: chrome.webRequest.WebResponseHeadersDetails) => void;
+type HeadersAddListener = (
+  info: chrome.webRequest.WebResponseHeadersDetails
+) => void;
+type BeforeRequestAddListener = (
+  details: chrome.webRequest.WebRequestDetails
+) => void;
 type Config = {
   urls: string[];
-  types: chrome.webRequest.ResourceType[];
+  types?: chrome.webRequest.ResourceType[];
 };
 type Permissions = string[];
 
@@ -24,9 +29,16 @@ export interface FirefoxBrowserExtension {
     };
   };
   webRequest: {
+    onBeforeRequest: {
+      addListener: (
+        fn: BeforeRequestAddListener,
+        config: Config,
+        permissions: Permissions
+      ) => void;
+    };
     onHeadersReceived: {
       addListener: (
-        fn: AddListener,
+        fn: HeadersAddListener,
         config: Config,
         permissions: Permissions
       ) => void;
@@ -35,7 +47,12 @@ export interface FirefoxBrowserExtension {
 }
 
 export interface OnHeadersReceivedOptions {
-  addListener: AddListener;
+  addListener: HeadersAddListener;
+  config: Config;
+  permissions: Permissions;
+}
+export interface OnBeforeRequestOptions {
+  addListener: BeforeRequestAddListener;
   config: Config;
   permissions: Permissions;
 }

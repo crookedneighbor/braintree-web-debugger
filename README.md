@@ -1,6 +1,8 @@
-# Browser Extension Template
+# Braintree Web Debugger
 
-A template for creating browser extensions in Typescript.
+A browser extension for debugging Braintree's web sdk. It checks if v3 of the Braintree web sdk was loaded on the page and provides information about how the SDK was loaded.
+
+Currently only supports integrations using the Braintree CDN to load the JavaScript files.
 
 ## Contributing
 

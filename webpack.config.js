@@ -65,10 +65,16 @@ const options = {
     minimize: false,
   },
   entry: {
-    popup: path.join(__dirname, "src", "js", "popup.ts"),
-    options: path.join(__dirname, "src", "js", "options", "index.ts"),
     background: path.join(__dirname, "src", "js", "background", "index.ts"),
     main: path.join(__dirname, "src", "js", "main", "index.ts"),
+    // embed: path.join(__dirname, "src", "js", "embed", "index.ts"),
+    ["fake-braintree"]: path.join(
+      __dirname,
+      "src",
+      "js",
+      "fake-braintree",
+      "index.ts"
+    ),
   },
   output: {
     path: path.join(__dirname, "build", BROWSER.toLowerCase()),
@@ -174,18 +180,6 @@ const options = {
           },
         },
       ],
-    }),
-    new HtmlWebpackPlugin({
-      filename: "popup.html",
-      // TODO fill this in with your popup title
-      title: "Browser Extension Popup",
-      chunks: ["popup"],
-    }),
-    new HtmlWebpackPlugin({
-      filename: "options.html",
-      // TODO fill this in with your options title
-      title: "Browser Extension Options",
-      chunks: ["options"],
     }),
     new HtmlWebpackPlugin({
       filename: "background.html",

@@ -1,4 +1,4 @@
-# Contributing to <BROWSER_EXTENSION_NAME>
+# Contributing to Braintree Web Debugger
 
 Contributions are very welcome!
 

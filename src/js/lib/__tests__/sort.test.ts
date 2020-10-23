@@ -92,6 +92,7 @@ describe("sort.sortByAttribute", () => {
 
   it("if one value is defined and the other is undefined, it does not throw and prefers the truthy value", () => {
     const handler = sortByAttribute(["id"]);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     delete array[0].id;
 

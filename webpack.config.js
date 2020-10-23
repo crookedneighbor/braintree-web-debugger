@@ -119,6 +119,15 @@ const options = {
         },
         test: /\.js$/,
       },
+      {
+        enforce: "post",
+        loader: "string-replace-loader",
+        options: {
+          search: 'new Function("" + callback)',
+          replace: "() => {}",
+        },
+        test: /\.js$/,
+      },
     ],
   },
   resolve: {
@@ -164,7 +173,8 @@ const options = {
             if (BROWSER === "FIREFOX") {
               json.browser_specific_settings = {
                 gecko: {
-                  id: "blade@crookedneighbor.com",
+                  id:
+                    process.env.npm_package_name + "_blade@crookedneighbor.com",
                   strict_min_version: "69.0",
                 },
               };

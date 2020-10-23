@@ -1,6 +1,5 @@
 import bus from "framebus";
-import loadScript from "@braintree/asset-loader/load-script";
-// import loadBTAnalyzer from "./load-bt-analyzer";
+import { loadScript } from "@braintree/asset-loader";
 
 import type {
   BraintreeComponent,

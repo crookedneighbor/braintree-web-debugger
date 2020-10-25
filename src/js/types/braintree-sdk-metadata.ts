@@ -1,7 +1,48 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+declare global {
+  interface Window {
+    braintree: Record<string, BraintreeComponentEntryPoint>;
+    braintreeDebugger: BraintreeDebuggerGlobal;
+  }
+}
+
+export type ComponentData = {
+  url: string;
+  version: string;
+  componentKey: string;
+  componentInCamelCase: string;
+  componentName: string;
+  minified: boolean;
+};
+
+export type BraintreeComponentEntryPoint = {
+  create: (
+    options: BraintreeComponentOptions,
+    cb?: (err: Error | null, instance?: BraintreeComponent) => void
+  ) => Promise<BraintreeComponent>;
+  VERSION: string;
+  isSupported?: () => boolean;
+  supportsInputFormatting?: () => boolean;
+  isBrowserSupported?: () => boolean;
+};
+
+export type BraintreeClient = {
+  getConfiguration: () => ClientMetadata;
+};
+
+export type BraintreeComponentOptions = {
+  client?: BraintreeClient;
+  authorization?: string;
+  [prop: string]: unknown;
+};
+
 export type BraintreeComponent = {
   [prop: string]: unknown;
-  client: string;
+  client?: BraintreeClient;
+  _client?: BraintreeClient;
+  _clientPromise?: Promise<BraintreeClient>;
 };
+
 export type Component = {
   key: string;
   name: string;
@@ -28,5 +69,13 @@ export type ClientMetadata = {
   authorizationType: string;
   gatewayConfiguration: {
     merchantId: string;
+    [prop: string]: unknown;
+  };
+};
+
+export type BraintreeDebuggerGlobal = {
+  metadataSent: boolean;
+  componentData: {
+    [prop: string]: Component;
   };
 };

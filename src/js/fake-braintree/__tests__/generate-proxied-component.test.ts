@@ -1,6 +1,7 @@
 import generateProxiedComponent, {
   HooksConfiguration,
 } from "../generate-proxied-component";
+import findClientConfiguration from "../find-client-configuration";
 import { loadScript } from "@braintree/asset-loader";
 import { mocked } from "ts-jest/utils";
 import util from "util";
@@ -12,6 +13,7 @@ import type {
 } from "../../types/braintree-sdk-metadata";
 
 jest.mock("@braintree/asset-loader");
+jest.mock("../find-client-configuration");
 
 describe("generateProxiedComponent", () => {
   let data: ComponentData;
@@ -33,6 +35,11 @@ describe("generateProxiedComponent", () => {
         }),
       },
     };
+    mocked(findClientConfiguration).mockImplementation(() => {
+      return new Promise(() => {
+        // noop
+      });
+    });
     mocked(loadScript).mockImplementation(() => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -80,9 +87,14 @@ describe("generateProxiedComponent", () => {
   it("returns an object with stubs for boolean functions", () => {
     const fakeComponent = generateProxiedComponent(data, hooks);
 
-    expect(fakeComponent.isSupported()).toBe(true);
-    expect(fakeComponent.supportsInputFormatting()).toBe(true);
-    expect(fakeComponent.isBrowserSupported()).toBe(false);
+    expect(fakeComponent.isSupported && fakeComponent.isSupported()).toBe(true);
+    expect(
+      fakeComponent.supportsInputFormatting &&
+        fakeComponent.supportsInputFormatting()
+    ).toBe(true);
+    expect(
+      fakeComponent.isBrowserSupported && fakeComponent.isBrowserSupported()
+    ).toBe(false);
   });
 
   describe("create", () => {
@@ -122,7 +134,9 @@ describe("generateProxiedComponent", () => {
             fields: "fields",
             styles: "styles",
           },
-          () => {}
+          () => {
+            // noop
+          }
         )
         .then(() => {
           expect(
@@ -221,7 +235,7 @@ describe("generateProxiedComponent", () => {
     });
 
     it("calls callback with error when create fails", () => {
-      expect.assertions(1);
+      expect.assertions(2);
       const err = new Error("create error");
 
       mocked(loadScript).mockImplementation(() => {
@@ -239,115 +253,20 @@ describe("generateProxiedComponent", () => {
       const cb = jest.fn();
 
       return fakeComponent.create({}, cb).catch((createError) => {
-        expect(cb).toBeCalledWith(err);
+        expect(err).toBe(createError);
+        expect(cb).toBeCalledWith(createError);
       });
     });
 
-    it("marks metadata as sent when component is client", () => {
-      mocked(loadScript).mockImplementation(() => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        window.braintree.client = {
-          create: jest.fn().mockResolvedValue({
-            getConfiguration: jest.fn(),
-          }),
-          VERSION: "3.63.1",
-        };
-
-        return Promise.resolve(document.createElement("script"));
-      });
-
-      data.componentKey = "client";
-      data.componentInCamelCase = "client";
-      data.componentName = "Client";
+    it("marks metadata as sent when client configuration is found", () => {
+      const fakeConfig = { foo: "bar" };
+      mocked(findClientConfiguration).mockResolvedValue(fakeConfig);
       const fakeComponent = generateProxiedComponent(data, hooks);
 
       expect(window.braintreeDebugger.metadataSent).toBe(false);
 
       return fakeComponent.create({}).then(() => {
         expect(window.braintreeDebugger.metadataSent).toBe(true);
-      });
-    });
-
-    it("marks metadata as sent when component is client", () => {
-      mocked(loadScript).mockImplementation(() => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        window.braintree.client = {
-          create: jest.fn().mockResolvedValue({
-            getConfiguration: jest.fn(),
-          }),
-          VERSION: "3.63.1",
-        };
-
-        return Promise.resolve(document.createElement("script"));
-      });
-
-      data.componentKey = "client";
-      data.componentInCamelCase = "client";
-      data.componentName = "Client";
-      const fakeComponent = generateProxiedComponent(data, hooks);
-
-      expect(window.braintreeDebugger.metadataSent).toBe(false);
-
-      return fakeComponent.create({}).then(() => {
-        expect(window.braintreeDebugger.metadataSent).toBe(true);
-      });
-    });
-
-    it("marks metadata as sent when component has a _clientPromise property", () => {
-      delete fakeHostedFields._client;
-      fakeHostedFields._clientPromise = Promise.resolve({
-        getConfiguration: jest.fn(),
-      });
-
-      const fakeComponent = generateProxiedComponent(data, hooks);
-
-      expect(window.braintreeDebugger.metadataSent).toBe(false);
-
-      return fakeComponent.create({}).then(() => {
-        expect(window.braintreeDebugger.metadataSent).toBe(true);
-      });
-    });
-
-    it("marks metadata as sent when component has a _client property", () => {
-      fakeHostedFields._client = {
-        getConfiguration: jest.fn(),
-      };
-
-      const fakeComponent = generateProxiedComponent(data, hooks);
-
-      expect(window.braintreeDebugger.metadataSent).toBe(false);
-
-      return fakeComponent.create({}).then(() => {
-        expect(window.braintreeDebugger.metadataSent).toBe(true);
-      });
-    });
-
-    it("marks metadata as sent when component has a client property", () => {
-      delete fakeHostedFields._client;
-      fakeHostedFields.client = {
-        getConfiguration: jest.fn(),
-      };
-
-      const fakeComponent = generateProxiedComponent(data, hooks);
-
-      expect(window.braintreeDebugger.metadataSent).toBe(false);
-
-      return fakeComponent.create({}).then(() => {
-        expect(window.braintreeDebugger.metadataSent).toBe(true);
-      });
-    });
-
-    it("does not mark metadata as sent when component has a no client-like property", () => {
-      delete fakeHostedFields._client;
-
-      const fakeComponent = generateProxiedComponent(data, hooks);
-
-      expect(window.braintreeDebugger.metadataSent).toBe(false);
-
-      return fakeComponent.create({}).then(() => {
-        expect(window.braintreeDebugger.metadataSent).toBe(false);
       });
     });
   });
@@ -371,6 +290,9 @@ describe("generateProxiedComponent", () => {
   });
 
   it("calls onClientMetadataAvailable hook when client is found for the first time", () => {
+    const fakeConfig = { foo: "bar" };
+    mocked(findClientConfiguration).mockResolvedValue(fakeConfig);
+
     const fakeComponent = generateProxiedComponent(data, hooks);
 
     expect(hooks.onClientMetadataAvailable).not.toBeCalled();

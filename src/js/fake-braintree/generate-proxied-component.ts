@@ -1,10 +1,9 @@
-import { loadScript } from "@braintree/asset-loader";
+import findClientConfiguration from "./find-client-configuration";
+import makeProxyComponent from "./make-proxy-component";
 
 import type {
   BraintreeComponentEntryPoint,
-  BraintreeComponent,
   BraintreeComponentOptions,
-  BraintreeClient,
   Component,
   ComponentData,
 } from "../types/braintree-sdk-metadata";
@@ -43,55 +42,25 @@ export default function generateProxiedComponent(
       // delete our fake version so the real script can load correctly
       delete window.braintree[componentInCamelCase];
 
-      return loadScript({
-        src: url + "?do-not-block=true",
-      })
-        .then(() => {
-          return window.braintree[componentInCamelCase]
-            .create(args[0])
-            .then((instance: BraintreeComponent) => {
-              return new Proxy(instance, {
-                get(target, prop, receiver) {
-                  const targetValue = Reflect.get(target, prop, receiver);
-
-                  if (typeof targetValue === "function") {
-                    return function (...functionArgs: unknown[]) {
-                      hooks.onComponentFunctionCall({
-                        componentKey,
-                        functionName: prop,
-                        args: functionArgs,
-                      });
-
-                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      // @ts-ignore
-                      return targetValue.apply(this, functionArgs);
-                    };
-                  }
-
-                  return targetValue;
-                },
-              });
-            });
-        })
+      return makeProxyComponent(
+        url,
+        args[0],
+        data,
+        hooks.onComponentFunctionCall
+      )
         .then((instance) => {
           if (
             !window.braintreeDebugger.metadataSent &&
             version.charAt(0) === "3"
           ) {
-            let client: BraintreeClient;
-            if (componentKey === "client") {
-              client = (instance as unknown) as BraintreeClient;
-            } else {
-              client = (instance._clientPromise ||
-                instance._client ||
-                instance.client) as BraintreeClient;
-            }
-            if (client) {
-              window.braintreeDebugger.metadataSent = true;
-              Promise.resolve(client).then((client) => {
-                hooks.onClientMetadataAvailable(client.getConfiguration());
+            findClientConfiguration(componentKey, instance)
+              .then((config) => {
+                window.braintreeDebugger.metadataSent = true;
+                hooks.onClientMetadataAvailable(config);
+              })
+              .catch(() => {
+                // ignore when configuration cannot be found
               });
-            }
           }
           const details = window.braintreeDebugger.componentData[componentKey];
 

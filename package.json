@@ -51,6 +51,6 @@
   },
   "dependencies": {
     "@braintree/asset-loader": "^0.4.4",
-    "framebus": "^4.0.4"
+    "framebus": "^5.0.0"
   }
 }

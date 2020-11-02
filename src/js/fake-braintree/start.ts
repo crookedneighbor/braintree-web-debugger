@@ -1,11 +1,13 @@
-import bus from "framebus";
+import Framebus from "framebus";
 import deriveComponentDataFromScriptUrl from "./derive-component-data-from-script-url";
 import generateProxiedComponent from "./generate-proxied-component";
 
+const bus = new Framebus();
+
 export default function start(): void {
   bus.emit("FAKE_BRAINTREE_READY");
-  bus.on("MAIN_EXTENSION_READY", (data: unknown, reply: () => void) => {
-    reply();
+  bus.on("MAIN_EXTENSION_READY", (data, reply) => {
+    reply({});
   });
 
   const myself = document.currentScript as HTMLScriptElement;

@@ -1,4 +1,4 @@
-import bus from "framebus";
+import Framebus from "framebus";
 import Modal from "./modal";
 import BTLogoButton from "./bt-logo-button";
 
@@ -16,6 +16,7 @@ const IGNORABLE_FUNCTIONS = {
 };
 
 export default async function start(): Promise<void> {
+  const bus = new Framebus();
   let modal: Modal;
   let btLogo: BTLogoButton;
 
@@ -38,19 +39,20 @@ export default async function start(): Promise<void> {
   bus.on("FAKE_BRAINTREE_READY", go);
   bus.emit("MAIN_EXTENSION_READY", {}, go);
 
-  bus.on("CLIENT_METADATA", (data: ClientMetadata) => {
-    modal.addClientMetadata(data);
+  bus.on("CLIENT_METADATA", (data) => {
+    modal.addClientMetadata(data as ClientMetadata);
     btLogo.reveal();
   });
 
-  bus.on("COMPONENT_DETAILS", (data: Component) => {
+  bus.on("COMPONENT_DETAILS", (data) => {
     if (data.key === "client") {
       return;
     }
-    modal.addComponent(data);
+    modal.addComponent(data as Component);
   });
 
-  bus.on("COMPONENT_FUNCTION_CALL", (data: ComponentFunctionLog) => {
+  bus.on("COMPONENT_FUNCTION_CALL", (payload) => {
+    const data = payload as ComponentFunctionLog;
     if (
       String(data.functionName).charAt(0) !== "_" &&
       !(data.functionName in IGNORABLE_FUNCTIONS)

@@ -1,6 +1,7 @@
 import type { ComponentData } from "../types/braintree-sdk-metadata";
 
 const COMPONENT_NAME_MAP: Record<string, string> = {
+  dropin: "Drop-in",
   "three-d-secure": "3D Secure",
 };
 
@@ -11,7 +12,9 @@ export default function deriveComponentDataFromScriptUrl(
   const componentKey = urlParts
     .find((part) => part.indexOf(".js") > -1)
     ?.replace(/(.min)?.js/, "") as string;
-  const version = urlParts.find((part) => part.indexOf("3.") > -1) as string;
+  const version = urlParts.find(
+    (part) => part.indexOf("3.") > -1 || part.indexOf("1.") > -1
+  ) as string;
   // https://hisk.io/javascript-snake-to-camel/
   const componentInCamelCase = componentKey.replace(/([-_][a-z])/g, (group) =>
     group.toUpperCase().replace("-", "").replace("_", "")

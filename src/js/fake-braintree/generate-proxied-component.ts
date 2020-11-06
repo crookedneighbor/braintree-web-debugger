@@ -49,10 +49,7 @@ export default function generateProxiedComponent(
         hooks.onComponentFunctionCall
       )
         .then((instance) => {
-          if (
-            !window.braintreeDebugger.metadataSent &&
-            version.charAt(0) === "3"
-          ) {
+          if (!window.braintreeDebugger.metadataSent) {
             findClientConfiguration(componentKey, instance)
               .then((config) => {
                 window.braintreeDebugger.metadataSent = true;

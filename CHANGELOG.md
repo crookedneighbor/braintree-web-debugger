@@ -1,6 +1,6 @@
 ## Changelog
 
-# unreleased
+# 0.2.0
 
 - Add Drop-in to components that are detected
 

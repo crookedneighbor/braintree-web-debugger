@@ -116,10 +116,24 @@ export default class BraintreeDebuggerMoal {
 
   logFunctionCall(data: ComponentFunctionLog): void {
     const component = data.component;
-    if (!this.components[component]) {
-      console.error(component, "not found");
+
+    if (component === "client") {
+      // no need to log client calls
+      // usually just the underlying request
+      // or a getConfiguration call
       return;
     }
+
+    if (!this.components[component]) {
+      console.error(
+        "attempted to log a function call from",
+        component,
+        "but it was not found"
+      );
+      console.error(data);
+      return;
+    }
+
     const log = `${component}.${data.functionName}(${data.args
       .map((arg) => {
         if (arg === "Function") {

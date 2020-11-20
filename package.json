@@ -1,7 +1,7 @@
 {
   "name": "braintree-web-debugger",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A browser extension for debugging the Braintree web sdk",
   "scripts": {
     "pretty": "prettier --write .",

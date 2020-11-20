@@ -1,5 +1,5 @@
 import Framebus from "framebus";
-import deriveComponentDataFromScriptUrl from "./derive-component-data-from-script-url";
+import deriveComponentDataFromScriptUrl from "../lib/derive-component-data-from-script-url";
 import generateProxiedComponent from "./generate-proxied-component";
 
 const bus = new Framebus();

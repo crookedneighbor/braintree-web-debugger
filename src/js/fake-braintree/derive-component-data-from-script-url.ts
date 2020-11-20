@@ -15,6 +15,7 @@ export default function deriveComponentDataFromScriptUrl(
   const version = urlParts.find(
     (part) => part.indexOf("3.") > -1 || part.indexOf("1.") > -1
   ) as string;
+  const [majorVersion, minorVersion, patchVersion] = version.split(".");
   // https://hisk.io/javascript-snake-to-camel/
   const componentInCamelCase = componentKey.replace(/([-_][a-z])/g, (group) =>
     group.toUpperCase().replace("-", "").replace("_", "")
@@ -32,6 +33,11 @@ export default function deriveComponentDataFromScriptUrl(
   return {
     url,
     version,
+    semverVersion: {
+      major: majorVersion,
+      minor: minorVersion,
+      patch: patchVersion,
+    },
     componentKey,
     componentInCamelCase,
     componentName,

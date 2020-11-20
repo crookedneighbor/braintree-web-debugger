@@ -9,6 +9,11 @@ declare global {
 export type ComponentData = {
   url: string;
   version: string;
+  semverVersion: {
+    major: string;
+    minor: string;
+    patch: string;
+  };
   componentKey: string;
   componentInCamelCase: string;
   componentName: string;

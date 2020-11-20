@@ -9,6 +9,11 @@ describe("deriveComponentDataFromScriptUrl", () => {
     expect(data).toEqual({
       url,
       version: "3.63.1",
+      semverVersion: {
+        major: "3",
+        minor: "63",
+        patch: "1",
+      },
       componentKey: "hosted-fields",
       componentInCamelCase: "hostedFields",
       componentName: "Hosted Fields",
@@ -24,6 +29,11 @@ describe("deriveComponentDataFromScriptUrl", () => {
     expect(data).toEqual({
       url,
       version: "1.24.0",
+      semverVersion: {
+        major: "1",
+        minor: "24",
+        patch: "0",
+      },
       componentKey: "dropin",
       componentInCamelCase: "dropin",
       componentName: "Drop-in",
@@ -39,6 +49,11 @@ describe("deriveComponentDataFromScriptUrl", () => {
     expect(data).toEqual({
       url,
       version: "3.63.1",
+      semverVersion: {
+        major: "3",
+        minor: "63",
+        patch: "1",
+      },
       componentKey: "hosted-fields",
       componentInCamelCase: "hostedFields",
       componentName: "Hosted Fields",
@@ -54,6 +69,11 @@ describe("deriveComponentDataFromScriptUrl", () => {
     expect(data).toEqual({
       url,
       version: "3.63.1",
+      semverVersion: {
+        major: "3",
+        minor: "63",
+        patch: "1",
+      },
       componentKey: "three-d-secure",
       componentInCamelCase: "threeDSecure",
       componentName: "3D Secure",

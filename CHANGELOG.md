@@ -1,5 +1,9 @@
 ## Changelog
 
+# unreleased
+
+- Fix issue where events may be emitted before extension is ready to accept them
+
 # 0.2.0
 
 - Add Drop-in to components that are detected

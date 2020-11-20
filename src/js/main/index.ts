@@ -17,27 +17,20 @@ const IGNORABLE_FUNCTIONS = {
 
 export default async function start(): Promise<void> {
   const bus = new Framebus();
-  let modal: Modal;
-  let btLogo: BTLogoButton;
+  const modal = new Modal();
+  const btLogo = new BTLogoButton({
+    onClick() {
+      modal.open();
+    },
+  });
 
-  function go() {
-    if (modal) {
-      return;
-    }
-
-    modal = new Modal();
-    btLogo = new BTLogoButton({
-      onClick() {
-        modal.open();
-      },
-    });
-
+  function appendElementsToPage() {
     document.body.appendChild(btLogo.element);
     document.body.appendChild(modal.element);
   }
 
-  bus.on("FAKE_BRAINTREE_READY", go);
-  bus.emit("MAIN_EXTENSION_READY", {}, go);
+  bus.on("FAKE_BRAINTREE_READY", appendElementsToPage);
+  bus.emit("MAIN_EXTENSION_READY", {}, appendElementsToPage);
 
   bus.on("CLIENT_METADATA", (data) => {
     modal.addClientMetadata(data as ClientMetadata);

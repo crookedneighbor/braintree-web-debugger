@@ -54,6 +54,11 @@ describe("generateProxiedComponent", () => {
     data = {
       url: "https://js.braintreegateway.com/web/3.63.1/js/hosted-fields.js",
       version: "3.63.1",
+      semverVersion: {
+        major: "3",
+        minor: "63",
+        patch: "1",
+      },
       componentKey: "hosted-fields",
       componentInCamelCase: "hostedFields",
       componentName: "Hosted Fields",

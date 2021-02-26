@@ -297,9 +297,7 @@ export default class BraintreeDebuggerMoal {
   }
 
   private makeModalElement(): HTMLDivElement {
-    const modal = createElement<
-      HTMLDivElement
-    >(`<div class="braintree-web-debugger__modal-outer-container">
+    const modal = createElement<HTMLDivElement>(`<div class="braintree-web-debugger__modal-outer-container">
   <div class="braintree-web-debugger__modal-container">
     <div class="braintree-web-debugger__modal-main active">
       <div class="braintree-web-debugger__modal-metadata"></div>
